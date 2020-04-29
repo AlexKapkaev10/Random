@@ -32,7 +32,6 @@ public class Spawner : MonoBehaviour
             GameObject thisFigure = Instantiate(figures[currentFigureNumber], new Vector3(randomPosX, randomPosY, randomPosZ), Quaternion.identity);
             SaverFigures.Add(thisFigure);
             
-
         }
     }
 }
