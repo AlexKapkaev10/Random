@@ -15,8 +15,13 @@ public class Saver : MonoBehaviour
     [SerializeField] private float _minPositionZ;
     [SerializeField] private float _maxPositionZ;
 
+    private float maxScale = 2f;
+
+    private MeshRenderer _meshRenderer;
+
     private void Start()
     {
+        _meshRenderer = GetComponent<MeshRenderer>();
         LoadGame();
     }
 
@@ -28,35 +33,57 @@ public class Saver : MonoBehaviour
             float randomPosY = Random.Range(_minPositionY, _maxPositionY);
             float randomPosZ = Random.Range(_minPositionZ, _maxPositionZ);
             transform.position = new Vector3(randomPosX, randomPosY, randomPosZ);
+            _meshRenderer.material.color = Random.ColorHSV(0f, 1f, 1f, 1f, 0.5f, 1f);
+            float randomScale = Random.Range(0.5f, maxScale);
+            transform.localScale = new Vector3(randomScale, randomScale, randomScale);
             SaveGame();
         }
     }
     private void LoadGame()
     {
-        string loadPosition = PlayerPrefs.GetString("FigureLocation");
+        string loadData = PlayerPrefs.GetString("FigureLocation");
 
-        if(loadPosition !=null && loadPosition.Length > 0)
+        if(loadData != null && loadData.Length > 0)
         {
-            SavePosition savePosition = JsonUtility.FromJson<SavePosition>(loadPosition);
+            SaveData saveData = JsonUtility.FromJson<SaveData>(loadData);
 
-            if(savePosition != null)
+            if(saveData != null)
             {
                 Vector3 newPosition = new Vector3();
-                newPosition.x = savePosition.x;
-                newPosition.y = savePosition.y;
-                newPosition.z = savePosition.z;
+                newPosition.x = saveData.positionX;
+                newPosition.y = saveData.positionY;
+                newPosition.z = saveData.positionZ;
+
+                float newScale;
+                newScale = saveData.scale;
                 gameObject.transform.position = newPosition;
+                gameObject.transform.localScale = new Vector3(newScale, newScale, newScale);
+
+                float newColorR;
+                float newColorG;
+                float newColorB;
+                newColorR = saveData.colorR;
+                newColorG = saveData.colorG;
+                newColorB = saveData.colorB;
+                _meshRenderer.material.color = new Color(newColorR, newColorG, newColorB);
             }
         }
     }
 
     private void SaveGame()
     {
-        SavePosition savePosition = new SavePosition();
-        savePosition.x = gameObject.transform.position.x;
-        savePosition.y = gameObject.transform.position.y;
-        savePosition.z = gameObject.transform.position.z;
-        string json = JsonUtility.ToJson(savePosition);
+        SaveData saveData = new SaveData();
+        saveData.positionX = gameObject.transform.position.x;
+        saveData.positionY = gameObject.transform.position.y;
+        saveData.positionZ = gameObject.transform.position.z;
+
+        saveData.scale = gameObject.transform.localScale.x;
+
+        saveData.colorR = GetComponent<MeshRenderer>().material.color.r;
+        saveData.colorG = GetComponent<MeshRenderer>().material.color.g;
+        saveData.colorB = GetComponent<MeshRenderer>().material.color.b;
+        string json = JsonUtility.ToJson(saveData);
         PlayerPrefs.SetString("FigureLocation", json);
+        Debug.Log(json);
     }
 }
