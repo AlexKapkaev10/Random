@@ -372,9 +372,10 @@ MonoBehaviour:
   - {fileID: 1727291632587619315, guid: fb03e994127ff4a6191fade90cbbfbbe, type: 3}
   - {fileID: 4634510839461342170, guid: 395a8c72e5559458e99367b1215157d4, type: 3}
   - {fileID: 3382932033942320131, guid: b46540c4700994b7782e548807af5282, type: 3}
-  minPosX: -9
-  maxPosX: 9
-  minPosY: 1
-  maxPosY: 3
-  minPosZ: -9
-  maxPosZ: 9
+  SaverFigures: []
+  _minPositionX: -9
+  _maxPositionX: 9
+  _minPositionY: 1
+  _maxPositionY: 3
+  _minPositionZ: -9
+  _maxPositionZ: 9
