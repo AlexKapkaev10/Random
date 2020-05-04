@@ -19,26 +19,54 @@ public class Saver : MonoBehaviour
 
     private MeshRenderer _meshRenderer;
 
+    public List<Figure> figuresList;
+
+    private Figure figureScript;
+
+    public GameObject figurePrefab;
+
+    public int countFigure;
+
+    public GameObject thisFigure;
+
     private void Start()
     {
-        _meshRenderer = GetComponent<MeshRenderer>();
+        SaveData saveData = new SaveData();
+        countFigure = saveData.count;
         LoadGame();
     }
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0))
-        {            
+        InputSpawner();
+    }
+
+    private void InputSpawner()
+    {
+        if (Input.GetMouseButtonDown(0) && countFigure < 1)
+        {
             float randomPosX = Random.Range(_minPositionX, _maxPositionX);
             float randomPosY = Random.Range(_minPositionY, _maxPositionY);
             float randomPosZ = Random.Range(_minPositionZ, _maxPositionZ);
-            transform.position = new Vector3(randomPosX, randomPosY, randomPosZ);
-            _meshRenderer.material.color = Random.ColorHSV(0f, 1f, 1f, 1f, 0.5f, 1f);
+
             float randomScale = Random.Range(0.5f, maxScale);
-            transform.localScale = new Vector3(randomScale, randomScale, randomScale);
+            //int currentFigureNumber = Random.Range(0, figurePrefabs.Length);
+            thisFigure = Instantiate(figurePrefab, new Vector3(randomPosX, randomPosY, randomPosZ), Quaternion.identity);
+
+            thisFigure.transform.position = new Vector3(randomPosX, randomPosY, randomPosZ);
+            _meshRenderer = thisFigure.GetComponent<MeshRenderer>();
+            _meshRenderer.material.color = Random.ColorHSV(0f, 1f, 1f, 1f, 0.5f, 1f);
+
+            thisFigure.transform.localScale = new Vector3(randomScale, randomScale, randomScale);
+
+            figureScript = thisFigure.GetComponent<Figure>();
+
+            figuresList.Add(figureScript);
+            countFigure++;
             SaveGame();
         }
     }
+
     private void LoadGame()
     {
         string loadData = PlayerPrefs.GetString("FigureLocation");
@@ -49,6 +77,7 @@ public class Saver : MonoBehaviour
 
             if(saveData != null)
             {
+                thisFigure = Instantiate(figurePrefab);
                 Vector3 newPosition = new Vector3();
                 newPosition.x = saveData.positionX;
                 newPosition.y = saveData.positionY;
@@ -56,8 +85,8 @@ public class Saver : MonoBehaviour
 
                 float newScale;
                 newScale = saveData.scale;
-                gameObject.transform.position = newPosition;
-                gameObject.transform.localScale = new Vector3(newScale, newScale, newScale);
+                thisFigure.transform.position = newPosition;
+                thisFigure.transform.localScale = new Vector3(newScale, newScale, newScale);
 
                 float newColorR;
                 float newColorG;
@@ -65,7 +94,10 @@ public class Saver : MonoBehaviour
                 newColorR = saveData.colorR;
                 newColorG = saveData.colorG;
                 newColorB = saveData.colorB;
+                _meshRenderer = thisFigure.GetComponent<MeshRenderer>();
                 _meshRenderer.material.color = new Color(newColorR, newColorG, newColorB);
+
+                
             }
         }
     }
@@ -73,16 +105,21 @@ public class Saver : MonoBehaviour
     private void SaveGame()
     {
         SaveData saveData = new SaveData();
-        saveData.positionX = gameObject.transform.position.x;
-        saveData.positionY = gameObject.transform.position.y;
-        saveData.positionZ = gameObject.transform.position.z;
 
-        saveData.scale = gameObject.transform.localScale.x;
+        saveData.positionX = thisFigure.transform.position.x;
+        saveData.positionY = thisFigure.transform.position.y;
+        saveData.positionZ = thisFigure.transform.position.z;
 
-        saveData.colorR = GetComponent<MeshRenderer>().material.color.r;
-        saveData.colorG = GetComponent<MeshRenderer>().material.color.g;
-        saveData.colorB = GetComponent<MeshRenderer>().material.color.b;
+        saveData.scale = thisFigure.transform.localScale.x;
+
+        saveData.colorR = thisFigure.GetComponent<MeshRenderer>().material.color.r;
+        saveData.colorG = thisFigure.GetComponent<MeshRenderer>().material.color.g;
+        saveData.colorB = thisFigure.GetComponent<MeshRenderer>().material.color.b;
+
+        saveData.count = countFigure;
+
         string json = JsonUtility.ToJson(saveData);
+        //JsonUtility.ToJson(gameObject);
         PlayerPrefs.SetString("FigureLocation", json);
         Debug.Log(json);
     }

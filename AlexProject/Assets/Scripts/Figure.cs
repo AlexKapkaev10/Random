@@ -2,19 +2,29 @@
 
 public class Figure : MonoBehaviour
 {
-    private float maxScale = 2f;
+    public float positionX;
+    public float positionY;
+    public float positionZ;
+
+    public float scale;
+
+    public float colorR;
+    public float colorG;
+    public float colorB;
+
     private MeshRenderer _meshRenderer;
 
     private void Start()
     {
         _meshRenderer = GetComponent<MeshRenderer>();
-        ChangesFigure();
-    }
+        positionX = transform.position.x;
+        positionY = transform.position.y;
+        positionZ = transform.position.z;
 
-    private void ChangesFigure()
-    {
-        _meshRenderer.material.color = Random.ColorHSV(0f, 1f, 1f, 1f, 0.5f, 1f);
-        float randomScale = Random.Range(0.5f, maxScale);
-        transform.localScale += new Vector3(randomScale, randomScale, randomScale);
+        scale = transform.localScale.x;
+
+        colorR = _meshRenderer.material.color.r;
+        colorG = _meshRenderer.material.color.g;
+        colorB = _meshRenderer.material.color.b;
     }
 }

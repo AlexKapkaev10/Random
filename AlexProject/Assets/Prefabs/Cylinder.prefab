@@ -105,5 +105,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93e661bcfa3774f90bdaedec652dd3f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxScale: 0
-  colorFigure: {r: 0, g: 0, b: 0, a: 0}
+  positionX: 0
+  positionY: 0
+  positionZ: 0
+  scale: 0
+  colorR: 0
+  colorG: 0
+  colorB: 0
+  myType: 2

@@ -23,7 +23,6 @@ public class Spawner : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            
             int currentFigureNumber = Random.Range(0, figures.Length);
             float randomPosX = Random.Range(_minPositionX, _maxPositionX);
             float randomPosY = Random.Range(_minPositionY, _maxPositionY);

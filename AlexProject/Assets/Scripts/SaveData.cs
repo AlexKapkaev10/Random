@@ -11,4 +11,6 @@ public class SaveData
     public float colorR;
     public float colorG;
     public float colorB;
+
+    public int count;
 }
