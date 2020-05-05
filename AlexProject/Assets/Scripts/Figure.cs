@@ -14,6 +14,15 @@ public class Figure : MonoBehaviour
 
     private MeshRenderer _meshRenderer;
 
+    public enum Type
+    {
+        cube,
+        sphere,
+        cylinder
+    }
+
+    public Type myType;
+
     private void Start()
     {
         _meshRenderer = GetComponent<MeshRenderer>();

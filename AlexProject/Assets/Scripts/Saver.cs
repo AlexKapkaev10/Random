@@ -31,8 +31,6 @@ public class Saver : MonoBehaviour
 
     private void Start()
     {
-        SaveData saveData = new SaveData();
-        countFigure = saveData.count;
         LoadGame();
     }
 
@@ -48,18 +46,25 @@ public class Saver : MonoBehaviour
             float randomPosX = Random.Range(_minPositionX, _maxPositionX);
             float randomPosY = Random.Range(_minPositionY, _maxPositionY);
             float randomPosZ = Random.Range(_minPositionZ, _maxPositionZ);
-
             float randomScale = Random.Range(0.5f, maxScale);
-            //int currentFigureNumber = Random.Range(0, figurePrefabs.Length);
-            thisFigure = Instantiate(figurePrefab, new Vector3(randomPosX, randomPosY, randomPosZ), Quaternion.identity);
 
+            //int currentFigureNumber = Random.Range(0, figurePrefabs.Length);
+            thisFigure = Instantiate(figurePrefab);
             thisFigure.transform.position = new Vector3(randomPosX, randomPosY, randomPosZ);
             _meshRenderer = thisFigure.GetComponent<MeshRenderer>();
-            _meshRenderer.material.color = Random.ColorHSV(0f, 1f, 1f, 1f, 0.5f, 1f);
-
-            thisFigure.transform.localScale = new Vector3(randomScale, randomScale, randomScale);
-
             figureScript = thisFigure.GetComponent<Figure>();
+
+            _meshRenderer.material.color = Random.ColorHSV(0f, 1f, 1f, 1f, 0.5f, 1f);
+            thisFigure.transform.localScale = new Vector3(randomScale, randomScale, randomScale);
+            figureScript.positionX = randomPosX;
+            figureScript.positionY = randomPosY;
+            figureScript.positionZ = randomPosZ;
+
+            figureScript.scale = randomScale;
+
+            figureScript.colorR = thisFigure.GetComponent<MeshRenderer>().material.color.r;
+            figureScript.colorG = thisFigure.GetComponent<MeshRenderer>().material.color.g;
+            figureScript.colorB = thisFigure.GetComponent<MeshRenderer>().material.color.b;
 
             figuresList.Add(figureScript);
             countFigure++;
@@ -96,8 +101,8 @@ public class Saver : MonoBehaviour
                 newColorB = saveData.colorB;
                 _meshRenderer = thisFigure.GetComponent<MeshRenderer>();
                 _meshRenderer.material.color = new Color(newColorR, newColorG, newColorB);
+                //countFigure = saveData.count;
 
-                
             }
         }
     }
@@ -106,15 +111,15 @@ public class Saver : MonoBehaviour
     {
         SaveData saveData = new SaveData();
 
-        saveData.positionX = thisFigure.transform.position.x;
-        saveData.positionY = thisFigure.transform.position.y;
-        saveData.positionZ = thisFigure.transform.position.z;
+        saveData.positionX = figureScript.positionX;
+        saveData.positionY = figureScript.positionY;
+        saveData.positionZ = figureScript.positionZ;
 
-        saveData.scale = thisFigure.transform.localScale.x;
+        saveData.scale = figureScript.scale;
 
-        saveData.colorR = thisFigure.GetComponent<MeshRenderer>().material.color.r;
-        saveData.colorG = thisFigure.GetComponent<MeshRenderer>().material.color.g;
-        saveData.colorB = thisFigure.GetComponent<MeshRenderer>().material.color.b;
+        saveData.colorR = figureScript.colorR;
+        saveData.colorG = figureScript.colorG;
+        saveData.colorB = figureScript.colorB;
 
         saveData.count = countFigure;
 
