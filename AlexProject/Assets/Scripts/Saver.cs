@@ -20,12 +20,20 @@ public class Saver : MonoBehaviour
     private MeshRenderer _meshRenderer;
 
     public List<Figure> figuresList;
+    public List<float> positionListX;
+    public List<float> positionListY;
+    public List<float> positionListZ;
+    
+    public List<float> scaleList;
+    
+    
+    public List<float> colorListR;
+    public List<float> colorListG;
+    public List<float> colorListB;
 
-    private Figure figureScript;
-
+    private Figure _figureScript;
+    
     public GameObject figurePrefab;
-
-    public int countFigure;
 
     public GameObject thisFigure;
 
@@ -41,7 +49,7 @@ public class Saver : MonoBehaviour
 
     private void InputSpawner()
     {
-        if (Input.GetMouseButtonDown(0) && countFigure < 1)
+        if (Input.GetMouseButtonDown(0))
         {
             float randomPosX = Random.Range(_minPositionX, _maxPositionX);
             float randomPosY = Random.Range(_minPositionY, _maxPositionY);
@@ -52,22 +60,33 @@ public class Saver : MonoBehaviour
             thisFigure = Instantiate(figurePrefab);
             thisFigure.transform.position = new Vector3(randomPosX, randomPosY, randomPosZ);
             _meshRenderer = thisFigure.GetComponent<MeshRenderer>();
-            figureScript = thisFigure.GetComponent<Figure>();
+            _figureScript = thisFigure.GetComponent<Figure>();
+            
 
             _meshRenderer.material.color = Random.ColorHSV(0f, 1f, 1f, 1f, 0.5f, 1f);
             thisFigure.transform.localScale = new Vector3(randomScale, randomScale, randomScale);
-            figureScript.positionX = randomPosX;
-            figureScript.positionY = randomPosY;
-            figureScript.positionZ = randomPosZ;
 
-            figureScript.scale = randomScale;
+            _figureScript.positionX = randomPosX;
+            _figureScript.positionY = randomPosY;
+            _figureScript.positionZ = randomPosZ;
 
-            figureScript.colorR = thisFigure.GetComponent<MeshRenderer>().material.color.r;
-            figureScript.colorG = thisFigure.GetComponent<MeshRenderer>().material.color.g;
-            figureScript.colorB = thisFigure.GetComponent<MeshRenderer>().material.color.b;
+            _figureScript.scale = randomScale;
 
-            figuresList.Add(figureScript);
-            countFigure++;
+            _figureScript.colorR = _meshRenderer.material.color.r;
+            _figureScript.colorG = _meshRenderer.material.color.g;
+            _figureScript.colorB = _meshRenderer.material.color.b;
+
+            figuresList.Add(_figureScript);
+            positionListX.Add(_figureScript.positionX);
+            positionListY.Add(_figureScript.positionY);
+            positionListZ.Add(_figureScript.positionZ);
+            
+            scaleList.Add(_figureScript.scale);
+            
+            colorListR.Add(_figureScript.colorR);
+            colorListG.Add(_figureScript.colorG);
+            colorListB.Add(_figureScript.colorB);
+            
             SaveGame();
         }
     }
@@ -82,27 +101,45 @@ public class Saver : MonoBehaviour
 
             if(saveData != null)
             {
-                thisFigure = Instantiate(figurePrefab);
-                Vector3 newPosition = new Vector3();
-                newPosition.x = saveData.positionX;
-                newPosition.y = saveData.positionY;
-                newPosition.z = saveData.positionZ;
+                //thisFigure = Instantiate(figurePrefab);
+                figuresList = saveData.figureScripts;
+                
+                for (int i = 0; i < figuresList.Count; i++)
+                {
+                    thisFigure = Instantiate(figurePrefab);
+                    _figureScript = thisFigure.GetComponent<Figure>();
+                    figuresList[i] = _figureScript;
+                    positionListX = saveData.positionListX;
+                    positionListY = saveData.positionListY;
+                    positionListZ = saveData.positionListZ;
 
-                float newScale;
-                newScale = saveData.scale;
-                thisFigure.transform.position = newPosition;
-                thisFigure.transform.localScale = new Vector3(newScale, newScale, newScale);
+                    scaleList = saveData.scaleList;
 
-                float newColorR;
-                float newColorG;
-                float newColorB;
-                newColorR = saveData.colorR;
-                newColorG = saveData.colorG;
-                newColorB = saveData.colorB;
-                _meshRenderer = thisFigure.GetComponent<MeshRenderer>();
-                _meshRenderer.material.color = new Color(newColorR, newColorG, newColorB);
+                    colorListR = saveData.colorListR;
+                    colorListG = saveData.colorListG;
+                    colorListB = saveData.colorListB;
+                    
+                    Vector3 newPosition = new Vector3();
+                    newPosition.x = positionListX[i];
+                    newPosition.y = positionListY[i];
+                    newPosition.z = positionListZ[i];
+
+                    float newScale;
+                    newScale = saveData.scaleList[i];
+                    
+                    thisFigure.transform.position = newPosition;
+                    thisFigure.transform.localScale = new Vector3(newScale, newScale, newScale);
+
+                    float newColorR;
+                    float newColorG;
+                    float newColorB;
+                    newColorR = saveData.colorListR[i];
+                    newColorG = saveData.colorListG[i];
+                    newColorB = saveData.colorListB[i];
+                    _meshRenderer = thisFigure.GetComponent<MeshRenderer>();
+                    _meshRenderer.material.color = new Color(newColorR, newColorG, newColorB);
+                }
                 //countFigure = saveData.count;
-
             }
         }
     }
@@ -110,18 +147,17 @@ public class Saver : MonoBehaviour
     private void SaveGame()
     {
         SaveData saveData = new SaveData();
+        saveData.positionListX = positionListX;
+        saveData.positionListY = positionListY;
+        saveData.positionListZ = positionListZ;
 
-        saveData.positionX = figureScript.positionX;
-        saveData.positionY = figureScript.positionY;
-        saveData.positionZ = figureScript.positionZ;
+        saveData.scaleList = scaleList;
 
-        saveData.scale = figureScript.scale;
+        saveData.colorListR = colorListR;
+        saveData.colorListG = colorListG;
+        saveData.colorListB = colorListB;
 
-        saveData.colorR = figureScript.colorR;
-        saveData.colorG = figureScript.colorG;
-        saveData.colorB = figureScript.colorB;
-
-        saveData.count = countFigure;
+        saveData.figureScripts = figuresList;
 
         string json = JsonUtility.ToJson(saveData);
         //JsonUtility.ToJson(gameObject);

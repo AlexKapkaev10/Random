@@ -3,26 +3,16 @@
 [System.Serializable]
 public class SaveData
 {
-    public float positionX;
-    public float positionY;
-    public float positionZ;
+    public List<Figure> figureScripts;
+    public List<float> positionListX; 
+    public List<float> positionListY;  
+    public List<float> positionListZ;
 
-    public float scale;
+    public List<float> scaleList;
 
-    public float colorR;
-    public float colorG;
-    public float colorB;
+    public List<float> colorListR;
+    public List<float> colorListG;
+    public List<float> colorListB;
 
     public string type;
-
-    public enum Type
-    {
-        cube,
-        sphere,
-        cylinder
-    }
-
-    public Type myType;
-
-    public int count;
 }

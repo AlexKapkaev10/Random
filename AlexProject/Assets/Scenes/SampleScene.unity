@@ -374,7 +374,15 @@ MonoBehaviour:
   _maxPositionY: 3
   _minPositionZ: -9
   _maxPositionZ: 9
-  figuresList: []
+  figuresList:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   figurePrefab: {fileID: 1727291632587619315, guid: fb03e994127ff4a6191fade90cbbfbbe,
     type: 3}
   countFigure: 0

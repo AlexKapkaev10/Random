@@ -14,6 +14,7 @@ public class Figure : MonoBehaviour
 
     private MeshRenderer _meshRenderer;
 
+    
     public enum Type
     {
         cube,
