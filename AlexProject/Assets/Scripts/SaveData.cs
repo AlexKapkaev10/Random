@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 [System.Serializable]
 public class SaveData
@@ -13,6 +14,9 @@ public class SaveData
     public List<float> colorListR;
     public List<float> colorListG;
     public List<float> colorListB;
+
+    public List<int> typeCodeList;
+    
 
     public string type;
 }

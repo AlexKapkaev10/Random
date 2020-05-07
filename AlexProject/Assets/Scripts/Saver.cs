@@ -30,10 +30,14 @@ public class Saver : MonoBehaviour
     public List<float> colorListR;
     public List<float> colorListG;
     public List<float> colorListB;
+    
+    public List<int> typeCodeList;
 
     private Figure _figureScript;
     
-    public GameObject figurePrefab;
+    public GameObject[] figurePrefabs;
+    private int _currentFigureNumber;
+    
 
     public GameObject thisFigure;
 
@@ -56,8 +60,12 @@ public class Saver : MonoBehaviour
             float randomPosZ = Random.Range(_minPositionZ, _maxPositionZ);
             float randomScale = Random.Range(0.5f, maxScale);
 
-            //int currentFigureNumber = Random.Range(0, figurePrefabs.Length);
-            thisFigure = Instantiate(figurePrefab);
+            _currentFigureNumber = Random.Range(0, figurePrefabs.Length);
+                 
+            
+            thisFigure = Instantiate(figurePrefabs[_currentFigureNumber]);
+            
+            
             thisFigure.transform.position = new Vector3(randomPosX, randomPosY, randomPosZ);
             _meshRenderer = thisFigure.GetComponent<MeshRenderer>();
             _figureScript = thisFigure.GetComponent<Figure>();
@@ -75,6 +83,8 @@ public class Saver : MonoBehaviour
             _figureScript.colorR = _meshRenderer.material.color.r;
             _figureScript.colorG = _meshRenderer.material.color.g;
             _figureScript.colorB = _meshRenderer.material.color.b;
+            
+            
 
             figuresList.Add(_figureScript);
             positionListX.Add(_figureScript.positionX);
@@ -86,6 +96,9 @@ public class Saver : MonoBehaviour
             colorListR.Add(_figureScript.colorR);
             colorListG.Add(_figureScript.colorG);
             colorListB.Add(_figureScript.colorB);
+
+            int _typeCode = _figureScript.myType.GetHashCode();
+            typeCodeList.Add(_typeCode);
             
             SaveGame();
         }
@@ -94,19 +107,19 @@ public class Saver : MonoBehaviour
     private void LoadGame()
     {
         string loadData = PlayerPrefs.GetString("FigureLocation");
-
+        
         if(loadData != null && loadData.Length > 0)
         {
             SaveData saveData = JsonUtility.FromJson<SaveData>(loadData);
-
             if(saveData != null)
             {
-                //thisFigure = Instantiate(figurePrefab);
                 figuresList = saveData.figureScripts;
+                typeCodeList = saveData.typeCodeList;
                 
                 for (int i = 0; i < figuresList.Count; i++)
                 {
-                    thisFigure = Instantiate(figurePrefab);
+                    int thisTypeCode = typeCodeList[i];
+                    thisFigure = Instantiate(figurePrefabs[thisTypeCode]);
                     _figureScript = thisFigure.GetComponent<Figure>();
                     figuresList[i] = _figureScript;
                     positionListX = saveData.positionListX;
@@ -118,6 +131,8 @@ public class Saver : MonoBehaviour
                     colorListR = saveData.colorListR;
                     colorListG = saveData.colorListG;
                     colorListB = saveData.colorListB;
+
+                    
                     
                     Vector3 newPosition = new Vector3();
                     newPosition.x = positionListX[i];
@@ -139,7 +154,6 @@ public class Saver : MonoBehaviour
                     _meshRenderer = thisFigure.GetComponent<MeshRenderer>();
                     _meshRenderer.material.color = new Color(newColorR, newColorG, newColorB);
                 }
-                //countFigure = saveData.count;
             }
         }
     }
@@ -158,10 +172,9 @@ public class Saver : MonoBehaviour
         saveData.colorListB = colorListB;
 
         saveData.figureScripts = figuresList;
+        saveData.typeCodeList = typeCodeList;
 
         string json = JsonUtility.ToJson(saveData);
-        //JsonUtility.ToJson(gameObject);
         PlayerPrefs.SetString("FigureLocation", json);
-        Debug.Log(json);
     }
 }

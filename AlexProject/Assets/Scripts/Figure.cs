@@ -12,14 +12,16 @@ public class Figure : MonoBehaviour
     public float colorG;
     public float colorB;
 
-    private MeshRenderer _meshRenderer;
-
+    public string typeName;
     
-    public enum Type
+    private MeshRenderer _meshRenderer;
+    
+    public enum Type 
     {
         cube,
+        cylinder,
         sphere,
-        cylinder
+        capsule
     }
 
     public Type myType;
