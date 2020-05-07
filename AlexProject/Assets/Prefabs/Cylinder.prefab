@@ -112,4 +112,5 @@ MonoBehaviour:
   colorR: 0
   colorG: 0
   colorB: 0
-  myType: 2
+  typeName: 
+  myType: 1

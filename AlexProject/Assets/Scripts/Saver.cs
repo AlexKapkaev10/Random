@@ -26,7 +26,6 @@ public class Saver : MonoBehaviour
     
     public List<float> scaleList;
     
-    
     public List<float> colorListR;
     public List<float> colorListG;
     public List<float> colorListB;
